@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- Meta viewport ajustado para una experiencia óptima en móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flores Amarillas para Evelyn</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            height: 100dvh; /* Evita que el contenido quede oculto por la barra del navegador en celulares */
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 35px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border: 2px solid #fff9c4;
+            width: 85%; /* Se adapta al ancho del celular */
+            max-width: 450px; /* Evita que sea demasiado ancha en PC */
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #f57f17;
+            margin: 0 0 15px 0;
+            /* El tamaño del texto se ajusta dinámicamente según la pantalla */
+            font-size: clamp(1.6rem, 7vw, 2.5rem); 
+            text-shadow: 1px 1px 2px rgba(255, 235, 59, 0.5);
+        }
+
+        p {
+            color: #555;
+            /* Texto de párrafo responsivo */
+            font-size: clamp(1rem, 4.5vw, 1.2rem); 
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .flower {
+            position: absolute;
+            opacity: 0.85;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Animación CSS para el balanceo */
+        @keyframes sway {
+            0% { transform: rotate(-15deg); }
+            100% { transform: rotate(15deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>¡Feliz 21 de Septiembre, Evelyn! 🌻</h1>
+        <p>Dicen que regalar flores amarillas es una promesa de estar siempre ahí.<br>Gracias por ser la mejor amiga.</p>
+    </div>
+
+    <script>
+        const flowerSVG = `
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                <g transform="translate(50, 50)">
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFD54F" transform="rotate(0)"/>
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFC107" transform="rotate(45)"/>
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFD54F" transform="rotate(90)"/>
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFC107" transform="rotate(135)"/>
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFD54F" transform="rotate(180)"/>
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFC107" transform="rotate(225)"/>
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFD54F" transform="rotate(270)"/>
+                    <path d="M 0 0 C -20 -40, -40 -20, 0 -50 C 40 -20, 20 -40, 0 0" fill="#FFC107" transform="rotate(315)"/>
+                    <circle cx="0" cy="0" r="16" fill="#795548"/>
+                    <circle cx="0" cy="0" r="12" fill="#5D4037"/>
+                </g>
+            </svg>
+        `;
+
+        // Controlar la cantidad máxima de flores para no saturar el celular
+        let flowerCount = 0;
+        const maxFlowers = 35;
+
+        function createFlower() {
+            if (flowerCount >= maxFlowers) return;
+            flowerCount++;
+
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.innerHTML = flowerSVG;
+            
+            // Tamaños un poco más controlados para pantallas pequeñas
+            const size = Math.random() * 35 + 35; 
+            flower.style.width = size + 'px';
+            flower.style.height = size + 'px';
+            
+            // Asegurar que nazcan dentro del ancho de la pantalla actual
+            const startX = Math.random() * (window.innerWidth - size);
+            flower.style.left = startX + 'px';
+            flower.style.bottom = '-100px';
+            
+            const swayDuration = Math.random() * 2 + 2; 
+            flower.style.animation = `sway ${swayDuration}s ease-in-out infinite alternate`;
+            
+            document.body.appendChild(flower);
+            
+            let posY = -100;
+            let posX = startX;
+            const speedY = Math.random() * 1.5 + 0.8; 
+            const driftSpeed = (Math.random() - 0.5) * 0.8; 
+            
+            function animateFlower() {
+                posY += speedY;
+                posX += driftSpeed;
+                
+                flower.style.bottom = posY + 'px';
+                flower.style.left = posX + 'px';
+                
+                if (posY > window.innerHeight + 100) {
+                    flower.remove();
+                    flowerCount--; // Liberamos espacio para una nueva flor
+                } else {
+                    requestAnimationFrame(animateFlower);
+                }
+            }
+            
+            requestAnimationFrame(animateFlower);
+        }
+
+        // Generar flores respetando el límite máximo
+        setInterval(createFlower, 400);
+
+        // Flores iniciales
+        for(let i = 0; i < 10; i++) {
+            setTimeout(createFlower, Math.random() * 1500);
+        }
+        
+        // Ajustar dinámicamente si rotan el celular
+        window.addEventListener('resize', () => {
+            document.body.style.height = window.innerHeight + 'px';
+        });
+    </script>
+</body>
+</html>
